@@ -135,6 +135,7 @@ class JobtasticTask(Task):
       front-end code so that users know what to expect.
     """
     abstract = True
+    bypass_herd_avoidance = False
 
     @classmethod
     def delay_or_eager(self, *args, **kwargs):
@@ -238,11 +239,12 @@ class JobtasticTask(Task):
                 'Found existing cached and completed task: %s', task_id)
             return self.AsyncResult(task_id)
 
-        # Check for an in-progress equivalent task to avoid duplicating work
-        task_id = cache.get('herd:%s' % cache_key)
-        if task_id:
-            logging.info('Found existing in-progress task: %s', task_id)
-            return self.AsyncResult(task_id)
+        if not self.bypass_herd_avoidance:
+            # Check for an in-progress equivalent task to avoid duplicating work
+            task_id = cache.get('herd:%s' % cache_key)
+            if task_id:
+                logging.info('Found existing in-progress task: %s', task_id)
+                return self.AsyncResult(task_id)
 
         # It's not cached and it's not already running. Use an atomic lock to
         # start the task, ensuring there isn't a race condition that could
