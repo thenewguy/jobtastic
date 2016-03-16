@@ -228,6 +228,13 @@ These let you tweak the default behavior.
 Most often, you'll just be setting the `cache_duration`
 to enable result caching.
 
+#### bypass_herd_avoidance
+
+Defaults to False.
+If True, cache lookup for ongoing task will not be performed, although
+herd avoidance will still be set in the cache.  To disable cache set,
+use herd_avoidance_timeout=0.
+
 #### cache_duration
 
 If you want your results cached,
