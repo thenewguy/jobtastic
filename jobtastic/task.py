@@ -263,7 +263,7 @@ class JobtasticTask(Task):
         if total_count == 0:
             return 100, 1
 
-        completion_fraction = completed_count / total_count
+        completion_fraction = 1.0 * completed_count / total_count
         if completion_fraction == 0:
             completion_fraction = 1
 
